@@ -1,0 +1,77 @@
+<html>
+	<head>
+		<script
+			src="https://unpkg.com/react@16/umd/react.development.js"
+			crossorigin
+		></script>
+		<script
+			src="https://unpkg.com/react-dom@16/umd/react-dom.development.js"
+			crossorigin
+		></script>
+		<script src="https://unpkg.com/babel-standalone@6/babel.min.js"></script>
+		<script src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.19.2/axios.js"></script>
+	</head>
+	<body>
+		<div id="root"></div>
+		<script type="text/babel">
+			const { useEffect, useState } = React;
+
+			function App() {
+				const [products, setProds] = useState([]);
+
+				useEffect(() => {
+					axios
+						.get("/api/products")
+						.then(response => setProds(response.data))
+						.catch(e => {
+							console.log(e);
+						});
+				}, []);
+
+				return (
+					<div style={{ textAlign: "center" }}>
+						<h1>ACME EXPRESS W/JSON</h1>
+						<div
+							style={{
+								display: "flex",
+								flexDirection: "row",
+								flexWrap: "wrap",
+								justifyContent: "space-around"
+							}}
+						>
+							{products.map(prod => (
+								<div
+									key={prod.id}
+									style={{
+										backgroundColor: "#497f7f",
+										color: "white",
+										border: "solid black 1px",
+										padding: "3rem",
+										margin: "5rem",
+										borderRadius: "10px",
+										alignItems: "center"
+									}}
+								>
+									<div
+										style={{
+											fontSize: "20px",
+											letterSpacing: "2px",
+											wordSpacing: "2px",
+											fontWeight: "700",
+											fontVariant: "small-caps"
+										}}
+									>
+										{prod.name}
+									</div>
+									{prod.description}
+									<br />${prod.suggestedPrice}
+								</div>
+							))}
+						</div>
+					</div>
+				);
+			}
+			ReactDOM.render(<App />, document.querySelector("#root"));
+		</script>
+	</body>
+</html>
